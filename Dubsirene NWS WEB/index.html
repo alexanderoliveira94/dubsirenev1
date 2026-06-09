@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <title>DUB SIREN V3 WEB</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: #0b0b0b;
+            color: #fff;
+            font-family: Arial, Helvetica, sans-serif;
+            display: flex;
+            justify-content: center;
+            padding: 40px;
+        }
+
+        .panel {
+            width: 900px;
+            background: linear-gradient(180deg, #222, #111);
+            border-radius: 20px;
+            padding: 30px;
+            border: 2px solid #444;
+            box-shadow:
+                0 0 30px rgba(0, 0, 0, .7),
+                inset 0 0 20px rgba(255, 255, 255, .05);
+        }
+
+        .title {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .title h1 {
+            font-size: 42px;
+            letter-spacing: 4px;
+            color: #ffcc00;
+        }
+
+        .title p {
+            color: #aaa;
+            margin-top: 5px;
+        }
+
+        .controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        .control {
+            background: #1a1a1a;
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid #333;
+        }
+
+        .control label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            color: #ddd;
+            font-weight: bold;
+        }
+
+        input[type=range] {
+            width: 100%;
+            cursor: pointer;
+        }
+
+        select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: none;
+            background: #2b2b2b;
+            color: white;
+            font-size: 16px;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        button {
+            padding: 15px 35px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            transition: .2s;
+        }
+
+        #trigger {
+            background: #00cc66;
+            color: white;
+        }
+
+        #trigger:hover {
+            transform: scale(1.05);
+        }
+
+        #scale {
+            background: #0066ff;
+            color: white;
+        }
+
+        #scale:hover {
+            transform: scale(1.05);
+        }
+
+        .section-title {
+            margin-top: 25px;
+            margin-bottom: 10px;
+            color: #ffcc00;
+            font-size: 18px;
+        }
+
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            color: #666;
+            font-size: 13px;
+        }
+
+        .leds {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .led {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #300;
+            box-shadow: 0 0 10px #000;
+        }
+
+        .led.power {
+            background: #00ff66;
+            box-shadow: 0 0 15px #00ff66;
+        }
+
+        .led.signal {
+            background: #ff3300;
+            box-shadow: 0 0 15px #ff3300;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="panel">
+
+        <div class="title">
+            <h1>DUB SIREN V3</h1>
+            <p>Browser Synthesizer</p>
+        </div>
+
+        <div class="leds">
+            <div class="led power"></div>
+            <div class="led signal"></div>
+        </div>
+
+        <div class="controls">
+
+            <div class="control">
+                <label>
+                    Volume
+                    <span id="volumeValue">0.50</span>
+                </label>
+                <input id="volume" type="range"
+                    min="0" max="1"
+                    step="0.01"
+                    value="0.5">
+            </div>
+
+            <div class="control">
+                <label>
+                    Main Frequency
+                    <span id="mainFreqValue">300 Hz</span>
+                </label>
+                <input id="mainFreq" type="range"
+                    min="60"
+                    max="1260"
+                    value="300">
+            </div>
+
+            <div class="control">
+                <label>
+                    Mod Frequency
+                    <span id="modFreqValue">3 Hz</span>
+                </label>
+                <input id="modFreq" type="range"
+                    min="0.1"
+                    max="20"
+                    step="0.1"
+                    value="3">
+            </div>
+
+            <div class="control">
+                <label>
+                    FM Depth
+                    <span id="fmDepthValue">0.30</span>
+                </label>
+                <input id="fmDepth" type="range"
+                    min="0"
+                    max="1"
+                    step="0.01"
+                    value="0.30">
+            </div>
+
+            <div class="control">
+                <label>
+                    Delay
+                    <span id="delayValue">0.40 s</span>
+                </label>
+                <input id="delay" type="range"
+                    min="0"
+                    max="1"
+                    step="0.01"
+                    value="0.40">
+            </div>
+
+            <div class="control">
+                <label>
+                    Feedback
+                    <span id="feedbackValue">0.50</span>
+                </label>
+                <input id="feedback" type="range"
+                    min="0"
+                    max="0.95"
+                    step="0.01"
+                    value="0.50">
+            </div>
+
+        </div>
+
+        <div class="section-title">
+            Main Wave
+        </div>
+
+        <select id="mainWave">
+            <option value="sine">Sine</option>
+            <option value="triangle">Triangle</option>
+            <option value="square">Square</option>
+        </select>
+
+        <div class="section-title">
+            Mod Wave
+        </div>
+
+        <select id="modWave">
+            <option value="sine">Sine</option>
+            <option value="triangle">Triangle</option>
+            <option value="square">Square</option>
+        </select>
+
+        <div class="buttons">
+            <button id="trigger">
+                TRIGGER
+            </button>
+
+            <button id="scale">
+                SCALE OFF
+            </button>
+        </div>
+
+        <div class="footer">
+            Dub Siren V3 • Web Audio API
+        </div>
+
+    </div>
+
+    <script>
+        const sliders = [
+            "volume",
+            "mainFreq",
+            "modFreq",
+            "fmDepth",
+            "delay",
+            "feedback"
+        ];
+
+        sliders.forEach(id => {
+
+            const slider =
+                document.getElementById(id);
+
+            const label =
+                document.getElementById(id + "Value");
+
+            function update() {
+
+                if (!label) return;
+
+                if (id === "mainFreq")
+                    label.innerText = slider.value + " Hz";
+
+                else if (id === "modFreq")
+                    label.innerText = slider.value + " Hz";
+
+                else if (id === "delay")
+                    label.innerText = slider.value + " s";
+
+                else
+                    label.innerText = slider.value;
+            }
+
+            slider.addEventListener(
+                "input",
+                update
+            );
+
+            update();
+        });
+    </script>
+
+    <script src="siren.js"></script>
+
+</body>
+
+</html>
